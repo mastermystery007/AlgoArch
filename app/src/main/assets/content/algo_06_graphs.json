@@ -1,0 +1,155 @@
+{
+  "id": "graphs",
+  "order": 6,
+  "track": "algo",
+  "title": "Graph Forest",
+  "emoji": "🌲",
+  "description": "BFS, DFS, shortest paths and topological order.",
+  "levels": [
+    {
+      "id": "graphs-1",
+      "title": "BFS & DFS",
+      "challenges": [
+        {
+          "type": "trace",
+          "id": "graphs-1-bfs",
+          "algo": "bfs",
+          "start": "A",
+          "prompt": "Run BFS from A. Visit neighbors in alphabetical order. Tap nodes in the order they are visited.",
+          "nodes": [
+            {"id": "A", "x": 0.5, "y": 0.1},
+            {"id": "B", "x": 0.2, "y": 0.35},
+            {"id": "E", "x": 0.8, "y": 0.35},
+            {"id": "C", "x": 0.1, "y": 0.72},
+            {"id": "D", "x": 0.45, "y": 0.62},
+            {"id": "F", "x": 0.78, "y": 0.78},
+            {"id": "G", "x": 0.35, "y": 0.92}
+          ],
+          "edges": [
+            {"from": "A", "to": "B"}, {"from": "A", "to": "E"},
+            {"from": "B", "to": "C"}, {"from": "B", "to": "D"},
+            {"from": "E", "to": "F"}, {"from": "D", "to": "F"},
+            {"from": "D", "to": "G"}, {"from": "C", "to": "G"}
+          ],
+          "answer": ["A", "B", "E", "C", "D", "F", "G"],
+          "explanation": "BFS fans out in rings: A, then its neighbors B and E, then everything two steps away (C, D, F), then G."
+        },
+        {
+          "type": "trace",
+          "id": "graphs-1-dfs",
+          "algo": "dfs",
+          "start": "A",
+          "prompt": "Same graph, now DFS from A. Go deep first, choosing neighbors alphabetically.",
+          "nodes": [
+            {"id": "A", "x": 0.5, "y": 0.1},
+            {"id": "B", "x": 0.2, "y": 0.35},
+            {"id": "E", "x": 0.8, "y": 0.35},
+            {"id": "C", "x": 0.1, "y": 0.72},
+            {"id": "D", "x": 0.45, "y": 0.62},
+            {"id": "F", "x": 0.78, "y": 0.78},
+            {"id": "G", "x": 0.35, "y": 0.92}
+          ],
+          "edges": [
+            {"from": "A", "to": "B"}, {"from": "A", "to": "E"},
+            {"from": "B", "to": "C"}, {"from": "B", "to": "D"},
+            {"from": "E", "to": "F"}, {"from": "D", "to": "F"},
+            {"from": "D", "to": "G"}, {"from": "C", "to": "G"}
+          ],
+          "answer": ["A", "B", "C", "G", "D", "F", "E"],
+          "explanation": "DFS follows one path as far as it goes: A → B → C → G → D → F → E. E is reached last, through F, even though it touches A."
+        },
+        {
+          "type": "choice",
+          "id": "graphs-1-shortest",
+          "tag": "Pattern spotting",
+          "prompt": "Find the fewest moves for a knight to reach a square on a chessboard. Every move costs the same. Which algorithm?",
+          "options": ["DFS", "BFS", "Dijkstra with a heap", "Topological sort"],
+          "answer": 1,
+          "explanation": "In an unweighted graph, BFS reaches every node by the fewest edges first. Dijkstra also works but is overkill when all weights are equal."
+        },
+        {
+          "type": "choice",
+          "id": "graphs-1-complexity",
+          "tag": "Complexity duel",
+          "prompt": "BFS on a graph stored as an adjacency list with V vertices and E edges. Time complexity?",
+          "options": ["O(V)", "O(E log V)", "O(V + E)", "O(V²)"],
+          "answer": 2,
+          "explanation": "Each vertex is dequeued once and each edge is checked once (twice if undirected)."
+        }
+      ]
+    },
+    {
+      "id": "graphs-2",
+      "title": "Paths & Order",
+      "challenges": [
+        {
+          "type": "trace",
+          "id": "graphs-2-dijkstra",
+          "algo": "dijkstra",
+          "start": "S",
+          "prompt": "Run Dijkstra from S. Tap nodes in the order they are finalized (popped with their shortest distance).",
+          "nodes": [
+            {"id": "S", "x": 0.1, "y": 0.5},
+            {"id": "A", "x": 0.4, "y": 0.15},
+            {"id": "B", "x": 0.35, "y": 0.8},
+            {"id": "C", "x": 0.68, "y": 0.3},
+            {"id": "D", "x": 0.65, "y": 0.88},
+            {"id": "T", "x": 0.92, "y": 0.6}
+          ],
+          "edges": [
+            {"from": "S", "to": "A", "weight": 4},
+            {"from": "S", "to": "B", "weight": 1},
+            {"from": "B", "to": "A", "weight": 2},
+            {"from": "A", "to": "C", "weight": 1},
+            {"from": "B", "to": "C", "weight": 5},
+            {"from": "C", "to": "T", "weight": 3},
+            {"from": "B", "to": "D", "weight": 8},
+            {"from": "D", "to": "T", "weight": 1}
+          ],
+          "answer": ["S", "B", "A", "C", "T", "D"],
+          "explanation": "Distances: S 0, B 1, A 3 (via B, beating the direct 4), C 4, T 7, D 8 (via T, beating 9 via B). Dijkstra always finalizes the closest unfinished node next."
+        },
+        {
+          "type": "trace",
+          "id": "graphs-2-topo",
+          "algo": "topo",
+          "prompt": "Arrows point from a prerequisite to the course it unlocks. Run Kahn's algorithm, taking the alphabetically first ready course each time.",
+          "directed": true,
+          "nodes": [
+            {"id": "C", "x": 0.15, "y": 0.2},
+            {"id": "D", "x": 0.6, "y": 0.12},
+            {"id": "A", "x": 0.25, "y": 0.58},
+            {"id": "B", "x": 0.75, "y": 0.5},
+            {"id": "E", "x": 0.5, "y": 0.75},
+            {"id": "F", "x": 0.82, "y": 0.92}
+          ],
+          "edges": [
+            {"from": "D", "to": "B"}, {"from": "D", "to": "A"},
+            {"from": "C", "to": "A"}, {"from": "A", "to": "E"},
+            {"from": "B", "to": "E"}, {"from": "E", "to": "F"}
+          ],
+          "answer": ["C", "D", "A", "B", "E", "F"],
+          "explanation": "Start with courses that have no prerequisites (C, D). Taking each one lowers its children's in-degree; a child becomes ready when it hits zero."
+        },
+        {
+          "type": "choice",
+          "id": "graphs-2-cycle",
+          "tag": "Concept check",
+          "prompt": "Kahn's algorithm stops before processing every node. What does that tell you?",
+          "options": ["The graph is disconnected", "The graph has a cycle", "The graph has a negative edge", "Nothing; that is normal"],
+          "answer": 1,
+          "explanation": "Nodes on a cycle wait on each other, so their in-degree never reaches 0. That is how course-schedule problems detect impossible plans."
+        },
+        {
+          "type": "choice",
+          "id": "graphs-2-negative",
+          "tag": "Concept check",
+          "prompt": "When can Dijkstra's algorithm give the wrong answer?",
+          "options": ["When the graph is directed", "When there are negative edge weights", "When there are more edges than nodes", "When two paths tie"],
+          "answer": 1,
+          "explanation": "Dijkstra assumes a finalized node can never get cheaper. A negative edge breaks that. Use Bellman-Ford instead."
+        }
+      ]
+    }
+  ]
+}

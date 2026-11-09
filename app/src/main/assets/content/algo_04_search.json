@@ -1,0 +1,105 @@
+{
+  "id": "search",
+  "order": 4,
+  "track": "algo",
+  "title": "Binary Search Bay",
+  "emoji": "🌊",
+  "description": "Halve the search space every step, on arrays and on answers.",
+  "levels": [
+    {
+      "id": "search-1",
+      "title": "Divide the Space",
+      "challenges": [
+        {
+          "type": "order",
+          "id": "search-1-classic",
+          "prompt": "Write classic binary search on a sorted array.",
+          "lines": [
+            "def binary_search(nums, target):",
+            "    lo, hi = 0, len(nums) - 1",
+            "    while lo <= hi:",
+            "        mid = (lo + hi) // 2",
+            "        if nums[mid] == target:",
+            "            return mid",
+            "        if nums[mid] < target:",
+            "            lo = mid + 1",
+            "        else:",
+            "            hi = mid - 1",
+            "    return -1"
+          ],
+          "distractors": ["    while lo < hi:"],
+          "explanation": "With hi = len − 1 (inclusive), the loop must run while lo <= hi. Using lo < hi skips the last remaining candidate, so a one-element array would never be checked."
+        },
+        {
+          "type": "choice",
+          "id": "search-1-complexity",
+          "tag": "Complexity duel",
+          "prompt": "What is the time complexity of binary search on n sorted items?",
+          "options": ["O(n)", "O(log n)", "O(1)", "O(n log n)"],
+          "answer": 1,
+          "explanation": "Each comparison throws away half of what is left."
+        },
+        {
+          "type": "choice",
+          "id": "search-1-million",
+          "tag": "Estimate",
+          "prompt": "Roughly how many comparisons does binary search need, at most, to search 1,000,000 sorted items?",
+          "options": ["About 20", "About 100", "About 1,000", "About 500,000"],
+          "answer": 0,
+          "explanation": "2²⁰ ≈ 1,048,576, so 20 halvings are enough. That is why log n feels almost constant."
+        },
+        {
+          "type": "choice",
+          "id": "search-1-prereq",
+          "tag": "Concept check",
+          "prompt": "What must be true for binary search to work?",
+          "options": ["The data fits in memory", "There are no duplicates", "The data is sorted, or the condition is monotonic", "The size is a power of two"],
+          "answer": 2,
+          "explanation": "Binary search needs a yes/no question whose answer flips only once across the range. A sorted array is the most common example."
+        }
+      ]
+    },
+    {
+      "id": "search-2",
+      "title": "Search the Answer",
+      "challenges": [
+        {
+          "type": "choice",
+          "id": "search-2-koko",
+          "tag": "Pattern spotting",
+          "prompt": "Find the minimum eating speed that lets Koko finish all banana piles within h hours. Which pattern?",
+          "options": ["Greedy: always eat the biggest pile", "Binary search over possible speeds", "Sliding window", "Dynamic programming over piles"],
+          "answer": 1,
+          "explanation": "If speed s works, any faster speed works too. That monotonic yes/no lets you binary search the answer between 1 and the largest pile."
+        },
+        {
+          "type": "choice",
+          "id": "search-2-rotated",
+          "tag": "Concept check",
+          "prompt": "A sorted array was rotated, like [4, 5, 6, 7, 0, 1, 2]. Can you still find a target in O(log n)?",
+          "options": ["No, rotation forces a linear scan", "Yes: at every mid, one half is still sorted, so you can tell which half to keep", "Only if there are no negative numbers", "Only after sorting it again"],
+          "answer": 1,
+          "explanation": "Compare nums[mid] to the ends to see which half is in order, then check whether the target lies in that half."
+        },
+        {
+          "type": "choice",
+          "id": "search-2-first-bad",
+          "tag": "Pattern spotting",
+          "prompt": "Versions 1..n: once a version is bad, every later one is bad too. Find the first bad version with the fewest API calls.",
+          "options": ["Check from version 1 upwards", "Binary search for the leftmost bad version", "Check from n downwards", "Check random versions"],
+          "answer": 1,
+          "explanation": "The pattern is good, good, ..., bad, bad. Binary search for the boundary: if mid is bad, the answer is at mid or to its left."
+        },
+        {
+          "type": "choice",
+          "id": "search-2-overflow",
+          "tag": "Concept check",
+          "prompt": "Why do Java and C++ code often write mid = lo + (hi - lo) / 2 instead of (lo + hi) / 2?",
+          "options": ["It is faster", "It rounds up instead of down", "lo + hi can overflow a fixed-size integer", "It handles negative arrays"],
+          "answer": 2,
+          "explanation": "For very large indices, lo + hi can exceed the int limit and wrap negative. The subtraction form never exceeds hi."
+        }
+      ]
+    }
+  ]
+}

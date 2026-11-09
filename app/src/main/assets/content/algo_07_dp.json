@@ -1,0 +1,102 @@
+{
+  "id": "dp",
+  "order": 7,
+  "track": "algo",
+  "title": "DP Volcano",
+  "emoji": "🌋",
+  "description": "Dynamic programming: solve each subproblem once and reuse the answer.",
+  "levels": [
+    {
+      "id": "dp-1",
+      "title": "Memo Magic",
+      "challenges": [
+        {
+          "type": "choice",
+          "id": "dp-1-stairs-pattern",
+          "tag": "Pattern spotting",
+          "prompt": "Count the ways to climb n stairs if you can take 1 or 2 steps at a time. What structure does the answer have?",
+          "options": ["ways(n) = ways(n − 1) + ways(n − 2)", "ways(n) = 2ⁿ", "ways(n) = n!", "ways(n) = n²"],
+          "answer": 0,
+          "explanation": "Your last move was either 1 step (from n − 1) or 2 steps (from n − 2). It is the Fibonacci recurrence."
+        },
+        {
+          "type": "order",
+          "id": "dp-1-stairs-code",
+          "prompt": "Solve climbing stairs bottom-up in O(1) space.",
+          "lines": [
+            "def climb_stairs(n):",
+            "    if n <= 2:",
+            "        return n",
+            "    a, b = 1, 2",
+            "    for _ in range(3, n + 1):",
+            "        a, b = b, a + b",
+            "    return b"
+          ],
+          "distractors": ["    return a"],
+          "explanation": "Only the last two answers are needed, so two variables replace the whole table. After the loop, b holds ways(n)."
+        },
+        {
+          "type": "choice",
+          "id": "dp-1-naive-fib",
+          "tag": "Complexity duel",
+          "prompt": "What is the time complexity of this naive recursion?",
+          "code": "def fib(n):\n    if n < 2:\n        return n\n    return fib(n - 1) + fib(n - 2)",
+          "options": ["O(n)", "O(n²)", "O(2ⁿ)", "O(log n)"],
+          "answer": 2,
+          "explanation": "Each call spawns two more and the same values are recomputed again and again. Memoizing fib(k) brings it down to O(n)."
+        },
+        {
+          "type": "choice",
+          "id": "dp-1-properties",
+          "tag": "Concept check",
+          "prompt": "Which two properties signal that a problem fits dynamic programming?",
+          "options": ["Sorted input and unique values", "Overlapping subproblems and optimal substructure", "A graph and a start node", "Small input and recursion"],
+          "answer": 1,
+          "explanation": "Overlapping subproblems means caching pays off; optimal substructure means the best answer is built from best answers to smaller pieces."
+        }
+      ]
+    },
+    {
+      "id": "dp-2",
+      "title": "Table Talk",
+      "challenges": [
+        {
+          "type": "choice",
+          "id": "dp-2-greedy-fail",
+          "tag": "Trace it",
+          "prompt": "Coins are [1, 3, 4] and the amount is 6. Greedy always takes the biggest coin that fits. How many coins does greedy use, versus the optimum?",
+          "options": ["Greedy 2, optimum 2", "Greedy 3, optimum 2", "Greedy 3, optimum 3", "Greedy 4, optimum 2"],
+          "answer": 1,
+          "explanation": "Greedy takes 4 + 1 + 1 = 3 coins, but 3 + 3 uses only 2. That is why coin change needs DP: dp[a] = 1 + min(dp[a − c])."
+        },
+        {
+          "type": "choice",
+          "id": "dp-2-lcs",
+          "tag": "Pattern spotting",
+          "prompt": "Find the longest common subsequence of two strings. What does the DP table look like?",
+          "options": ["1D array over the first string", "2D table: dp[i][j] for prefixes of both strings", "A stack of characters", "A hash map of letter counts"],
+          "answer": 1,
+          "explanation": "If the characters match, dp[i][j] = dp[i−1][j−1] + 1; otherwise take the best of dropping a character from either string."
+        },
+        {
+          "type": "choice",
+          "id": "dp-2-lcs-complexity",
+          "tag": "Complexity duel",
+          "prompt": "LCS of strings with lengths m and n fills every cell of the table once. Time complexity?",
+          "options": ["O(m + n)", "O(m · n)", "O(2^(m+n))", "O(max(m, n))"],
+          "answer": 1,
+          "explanation": "There are m × n cells and each takes O(1). Space can drop to O(min(m, n)) by keeping only two rows."
+        },
+        {
+          "type": "choice",
+          "id": "dp-2-knapsack",
+          "tag": "Pattern spotting",
+          "prompt": "Pick items with weights and values to maximize total value without exceeding capacity W. Each item can be used once.",
+          "options": ["Sort by value and take greedily", "0/1 knapsack DP over items and capacity", "BFS", "Binary search on W"],
+          "answer": 1,
+          "explanation": "For each item, either skip it or take it: dp[w] = max(dp[w], dp[w − weight] + value). Iterate w downward so each item is used once."
+        }
+      ]
+    }
+  ]
+}

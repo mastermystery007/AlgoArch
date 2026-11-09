@@ -1,0 +1,105 @@
+{
+  "id": "stacks",
+  "order": 3,
+  "track": "algo",
+  "title": "Stack Canyon",
+  "emoji": "🏜️",
+  "description": "Stacks, queues and the monotonic stack trick for \"next greater\" problems.",
+  "levels": [
+    {
+      "id": "stacks-1",
+      "title": "Push & Pop",
+      "challenges": [
+        {
+          "type": "choice",
+          "id": "stacks-1-undo",
+          "tag": "Concept check",
+          "prompt": "An editor's Undo button should reverse the most recent action first. Which data structure fits?",
+          "options": ["Queue", "Stack", "Hash set", "Heap"],
+          "answer": 1,
+          "explanation": "Undo is last in, first out. A stack pops the newest action first."
+        },
+        {
+          "type": "order",
+          "id": "stacks-1-parens",
+          "prompt": "Check whether a string of brackets is balanced, like \"([]{})\".",
+          "lines": [
+            "def is_valid(s):",
+            "    pairs = {')': '(', ']': '[', '}': '{'}",
+            "    stack = []",
+            "    for ch in s:",
+            "        if ch in pairs:",
+            "            if not stack or stack.pop() != pairs[ch]:",
+            "                return False",
+            "        else:",
+            "            stack.append(ch)",
+            "    return not stack"
+          ],
+          "distractors": ["    return True"],
+          "explanation": "Push openers, and pop on each closer to check it matches. At the end the stack must be empty: \"((\" has no mismatches but is still invalid."
+        },
+        {
+          "type": "choice",
+          "id": "stacks-1-ops",
+          "tag": "Trace it",
+          "prompt": "On an empty stack: push 1, push 2, pop, push 3, pop, pop. What gets popped, in order?",
+          "options": ["1, 2, 3", "2, 3, 1", "3, 2, 1", "2, 1, 3"],
+          "answer": 1,
+          "explanation": "Pop takes the top: 2 (stack is [1]), then push 3 and pop 3, then pop 1."
+        },
+        {
+          "type": "choice",
+          "id": "stacks-1-bfs",
+          "tag": "Concept check",
+          "prompt": "Breadth-first search explores nodes level by level. Which structure holds the nodes waiting to be explored?",
+          "options": ["Stack", "Queue", "Priority queue", "Linked list sorted by value"],
+          "answer": 1,
+          "explanation": "A FIFO queue makes sure all nodes at distance d are processed before any at distance d + 1. Swap it for a stack and you get DFS."
+        }
+      ]
+    },
+    {
+      "id": "stacks-2",
+      "title": "Monotonic Stacks",
+      "challenges": [
+        {
+          "type": "choice",
+          "id": "stacks-2-temps",
+          "tag": "Pattern spotting",
+          "prompt": "For each day's temperature, find how many days until a warmer one. Which pattern?",
+          "options": ["Monotonic stack of unresolved days", "Sort the temperatures", "Two pointers from both ends", "Binary search on each day"],
+          "answer": 0,
+          "explanation": "Keep a stack of days still waiting for a warmer day (temperatures decreasing). Each new day pops and resolves every colder day on top."
+        },
+        {
+          "type": "choice",
+          "id": "stacks-2-complexity",
+          "tag": "Complexity duel",
+          "prompt": "In a monotonic stack solution, there is a while loop inside the for loop. What is the total time complexity?",
+          "code": "for i, t in enumerate(temps):\n    while stack and temps[stack[-1]] < t:\n        j = stack.pop()\n        answer[j] = i - j\n    stack.append(i)",
+          "options": ["O(n²)", "O(n log n)", "O(n)", "O(n·k)"],
+          "answer": 2,
+          "explanation": "Every index is pushed once and popped at most once, so the while loop runs at most n times in total. Amortized O(n)."
+        },
+        {
+          "type": "choice",
+          "id": "stacks-2-next-greater",
+          "tag": "Pattern spotting",
+          "prompt": "For each element, find the next element to its right that is larger. Brute force is O(n²). What gets you to O(n)?",
+          "options": ["A hash map", "A monotonic stack", "A min-heap", "Prefix sums"],
+          "answer": 1,
+          "explanation": "\"Next greater\" or \"next smaller\" is the signature of a monotonic stack."
+        },
+        {
+          "type": "choice",
+          "id": "stacks-2-window-max",
+          "tag": "Pattern spotting",
+          "prompt": "Return the maximum of every sliding window of size k in O(n). What structure tracks the candidates?",
+          "options": ["A sorted array", "A max-heap only", "A monotonic deque", "A stack"],
+          "answer": 2,
+          "explanation": "A deque keeps indices with decreasing values: drop smaller values from the back, expired ones from the front. The front is always the window's max."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "id": "scaling",
+  "order": 1,
+  "track": "arch",
+  "title": "Scaling Shores",
+  "emoji": "🏙️",
+  "description": "Load balancers, stateless servers and caches: your first million users.",
+  "levels": [
+    {
+      "id": "scaling-1",
+      "title": "Scale Out",
+      "challenges": [
+        {
+          "type": "choice",
+          "id": "scaling-1-horizontal",
+          "tag": "Concept check",
+          "prompt": "What does horizontal scaling mean?",
+          "options": ["Buying a bigger machine with more CPU and RAM", "Adding more machines and spreading the load across them", "Compressing responses", "Moving the database to SSDs"],
+          "answer": 1,
+          "explanation": "Vertical scaling is a bigger box and eventually hits a ceiling. Horizontal scaling adds more boxes, which is how large systems grow, but it needs something to share the traffic."
+        },
+        {
+          "type": "choice",
+          "id": "scaling-1-lb",
+          "tag": "Concept check",
+          "prompt": "You run 4 app servers. What does a load balancer add?",
+          "options": ["It caches database queries", "It spreads requests across healthy servers and stops sending to dead ones", "It encrypts the database", "It makes each server faster"],
+          "answer": 1,
+          "explanation": "A load balancer gives clients one address, distributes requests (round robin, least connections and so on) and health-checks the servers behind it."
+        },
+        {
+          "type": "choice",
+          "id": "scaling-1-stateless",
+          "tag": "Concept check",
+          "prompt": "Why do teams keep app servers stateless, storing sessions in a shared store instead of server memory?",
+          "options": ["Stateless code runs faster", "Any server can handle any request, so you can add or remove servers freely", "It uses less disk", "Browsers require it"],
+          "answer": 1,
+          "explanation": "If a session lives in one server's memory, that user is stuck to that server and loses the session when it dies. Stateless servers are interchangeable."
+        },
+        {
+          "type": "design",
+          "id": "scaling-1-launch",
+          "prompt": "Your app is launching tomorrow. One server will not survive. Build an architecture that handles the traffic.",
+          "scenario": {
+            "name": "Launch Day",
+            "baseRps": 2000,
+            "readRatio": 0.7,
+            "budget": 340,
+            "maxLatencyMs": 75,
+            "start": {"APP_SERVER": 1, "DB_SHARD": 1}
+          },
+          "explanation": "2,000 req/s needs at least 2 app servers, and extra servers do nothing without a load balancer in front. 3 servers keep utilization near 67%, which keeps latency low."
+        }
+      ]
+    },
+    {
+      "id": "scaling-2",
+      "title": "Read All About It",
+      "challenges": [
+        {
+          "type": "choice",
+          "id": "scaling-2-cache-aside",
+          "tag": "Concept check",
+          "prompt": "In the cache-aside pattern, what happens on a cache miss?",
+          "options": ["Return an error", "Read from the database, then store the result in the cache", "Write to the cache only", "Wait for the cache to refresh"],
+          "answer": 1,
+          "explanation": "The app checks the cache first; on a miss it loads from the database and populates the cache so the next read is a hit."
+        },
+        {
+          "type": "choice",
+          "id": "scaling-2-eviction",
+          "tag": "Concept check",
+          "prompt": "The cache is full. Which eviction policy removes the entry that has gone unused the longest?",
+          "options": ["FIFO", "LRU", "Random", "LFU"],
+          "answer": 1,
+          "explanation": "Least Recently Used assumes recent data will be needed again soon. It is the default in many caches and a classic interview build (hash map + doubly linked list)."
+        },
+        {
+          "type": "choice",
+          "id": "scaling-2-stale",
+          "tag": "Concept check",
+          "prompt": "A user updates their profile, but other users still see the old name. What is the most likely cause?",
+          "options": ["The load balancer is broken", "A stale cache entry that was never invalidated or expired", "The database lost the write", "The CDN is down"],
+          "answer": 1,
+          "explanation": "Caches trade freshness for speed. Delete or update the key when the data changes, and set a TTL as a safety net."
+        },
+        {
+          "type": "design",
+          "id": "scaling-2-newsfeed",
+          "prompt": "A news site: almost all traffic is people reading articles. The single database is melting. Fix it.",
+          "scenario": {
+            "name": "Breaking News",
+            "baseRps": 5000,
+            "readRatio": 0.9,
+            "budget": 600,
+            "maxLatencyMs": 55,
+            "start": {"APP_SERVER": 1, "DB_SHARD": 1}
+          },
+          "explanation": "4,500 reads/s would need 3 database shards or replicas. A cache answers ~85% of them from memory for far less money. Then add enough app servers behind a load balancer."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "id": "arrays",
+  "order": 1,
+  "track": "algo",
+  "title": "Arrays Archipelago",
+  "emoji": "🏝️",
+  "description": "Big O, arrays and hash maps: the tools behind half of all interview questions.",
+  "levels": [
+    {
+      "id": "arrays-1",
+      "title": "Big O Basics",
+      "challenges": [
+        {
+          "type": "choice",
+          "id": "arrays-1-nested",
+          "tag": "Complexity duel",
+          "prompt": "What is the time complexity?",
+          "code": "total = 0\nfor i in range(n):\n    for j in range(n):\n        total += a[i] * a[j]",
+          "options": ["O(n)", "O(n log n)", "O(n²)", "O(2ⁿ)"],
+          "answer": 2,
+          "explanation": "The inner loop runs n times for each of the n outer iterations, so the body runs n × n times."
+        },
+        {
+          "type": "choice",
+          "id": "arrays-1-halving",
+          "tag": "Complexity duel",
+          "prompt": "What is the time complexity?",
+          "code": "steps = 0\nwhile n > 1:\n    n //= 2\n    steps += 1",
+          "options": ["O(log n)", "O(n)", "O(√n)", "O(1)"],
+          "answer": 0,
+          "explanation": "n is halved every iteration, so it takes about log₂(n) halvings to reach 1."
+        },
+        {
+          "type": "choice",
+          "id": "arrays-1-sequential",
+          "tag": "Complexity duel",
+          "prompt": "Two loops, one after the other. What is the time complexity?",
+          "code": "for x in nums:\n    print(x)\nfor x in nums:\n    print(x * 2)",
+          "options": ["O(n²)", "O(2n²)", "O(log n)", "O(n)"],
+          "answer": 3,
+          "explanation": "Sequential loops add: n + n = 2n, and constants drop, so it is O(n). Only nested loops multiply."
+        },
+        {
+          "type": "choice",
+          "id": "arrays-1-doubling",
+          "tag": "Complexity duel",
+          "prompt": "What is the time complexity?",
+          "code": "for i in range(n):\n    j = 1\n    while j < n:\n        j *= 2",
+          "options": ["O(n)", "O(n log n)", "O(n²)", "O(log n)"],
+          "answer": 1,
+          "explanation": "The outer loop runs n times and the inner loop doubles j until it reaches n, which takes log n steps. n × log n."
+        },
+        {
+          "type": "choice",
+          "id": "arrays-1-hashlookup",
+          "tag": "Concept check",
+          "prompt": "On average, how long does it take to check whether a key exists in a hash map?",
+          "options": ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
+          "answer": 0,
+          "explanation": "A hash map jumps straight to a bucket using the key's hash, so lookups are constant time on average. Heavy collisions can degrade it to O(n) in the worst case."
+        }
+      ]
+    },
+    {
+      "id": "arrays-2",
+      "title": "Hash It Out",
+      "challenges": [
+        {
+          "type": "choice",
+          "id": "arrays-2-twosum-pattern",
+          "tag": "Pattern spotting",
+          "prompt": "Given an unsorted array and a target, return the indices of two numbers that add up to the target. Which approach gives O(n) time?",
+          "options": ["Sort, then binary search each element", "Check every pair with two nested loops", "One pass with a hash map of values seen so far", "Sliding window"],
+          "answer": 2,
+          "explanation": "For each number x, check whether target − x is already in the map. One pass, O(n) time, O(n) space. Sorting would lose the original indices and costs O(n log n)."
+        },
+        {
+          "type": "order",
+          "id": "arrays-2-twosum-code",
+          "prompt": "Build Two Sum using a hash map. Tap the lines in order.",
+          "lines": [
+            "def two_sum(nums, target):",
+            "    seen = {}",
+            "    for i, x in enumerate(nums):",
+            "        if target - x in seen:",
+            "            return [seen[target - x], i]",
+            "        seen[x] = i",
+            "    return []"
+          ],
+          "distractors": ["    nums.sort()"],
+          "explanation": "Check for the complement before storing the current value, so a number is never paired with itself. Sorting would scramble the indices you need to return."
+        },
+        {
+          "type": "choice",
+          "id": "arrays-2-anagrams",
+          "tag": "Pattern spotting",
+          "prompt": "Group a list of words so that anagrams (like \"eat\", \"tea\", \"ate\") end up together. What is the cleanest approach?",
+          "options": ["Compare every pair of words", "Hash map keyed by each word's sorted letters", "Sort the whole list alphabetically", "A stack of words"],
+          "answer": 1,
+          "explanation": "Anagrams share the same sorted letters (\"aet\"), so that makes a perfect hash key. Each word goes straight into its group."
+        },
+        {
+          "type": "choice",
+          "id": "arrays-2-duplicates",
+          "tag": "Complexity duel",
+          "prompt": "You check whether an array contains a duplicate by adding each element to a set and stopping if it is already there. Time complexity?",
+          "options": ["O(n²)", "O(n log n)", "O(n)", "O(1)"],
+          "answer": 2,
+          "explanation": "Each element gets one O(1) average set lookup and insert, so n elements cost O(n). The trade-off is O(n) extra memory."
+        }
+      ]
+    }
+  ]
+}

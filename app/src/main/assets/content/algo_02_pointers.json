@@ -1,0 +1,109 @@
+{
+  "id": "pointers",
+  "order": 2,
+  "track": "algo",
+  "title": "Two-Pointer Peaks",
+  "emoji": "⛰️",
+  "description": "Two pointers and sliding windows turn O(n²) brute force into a single pass.",
+  "levels": [
+    {
+      "id": "pointers-1",
+      "title": "Two Pointers",
+      "challenges": [
+        {
+          "type": "choice",
+          "id": "pointers-1-sortedpair",
+          "tag": "Pattern spotting",
+          "prompt": "The array is sorted. Find two numbers that sum to a target using O(1) extra space. Which pattern fits?",
+          "options": ["Hash map of seen values", "Two pointers moving in from both ends", "Recursion with memoization", "Monotonic stack"],
+          "answer": 1,
+          "explanation": "If the sum is too small, move the left pointer right; if too big, move the right pointer left. Sorting is what makes each move safe."
+        },
+        {
+          "type": "order",
+          "id": "pointers-1-palindrome",
+          "prompt": "Check whether a string is a palindrome with two pointers.",
+          "lines": [
+            "def is_palindrome(s):",
+            "    lo, hi = 0, len(s) - 1",
+            "    while lo < hi:",
+            "        if s[lo] != s[hi]:",
+            "            return False",
+            "        lo += 1",
+            "        hi -= 1",
+            "    return True"
+          ],
+          "distractors": ["    lo, hi = 0, len(s)"],
+          "explanation": "hi must start at len(s) − 1, the last valid index. Starting at len(s) would read past the end of the string."
+        },
+        {
+          "type": "choice",
+          "id": "pointers-1-complexity",
+          "tag": "Complexity duel",
+          "prompt": "In the sorted pair-sum solution, each step moves one of the two pointers inward. Time complexity?",
+          "options": ["O(n)", "O(n²)", "O(log n)", "O(n log n)"],
+          "answer": 0,
+          "explanation": "The pointers start n apart and close the gap by one each step, so there are at most n steps."
+        },
+        {
+          "type": "choice",
+          "id": "pointers-1-dedupe",
+          "tag": "Pattern spotting",
+          "prompt": "Remove duplicates from a sorted array in place and return the new length. Which technique?",
+          "options": ["Copy into a new array", "A slow pointer that writes and a fast pointer that reads", "Binary search for each value", "Sort it again"],
+          "answer": 1,
+          "explanation": "The fast pointer scans every element; when it finds a new value, the slow pointer writes it at the next slot. O(n) time, O(1) space."
+        }
+      ]
+    },
+    {
+      "id": "pointers-2",
+      "title": "Sliding Window",
+      "challenges": [
+        {
+          "type": "choice",
+          "id": "pointers-2-longest-unique",
+          "tag": "Pattern spotting",
+          "prompt": "Find the length of the longest substring without repeating characters.",
+          "options": ["Sliding window plus a set of characters in the window", "Sort the characters", "Dynamic programming over all substrings", "Binary search on the length"],
+          "answer": 0,
+          "explanation": "Grow the window to the right; when a repeat appears, shrink from the left until it is gone. Each character enters and leaves the window once: O(n)."
+        },
+        {
+          "type": "order",
+          "id": "pointers-2-window-sum",
+          "prompt": "Return the maximum sum of any k consecutive elements, without re-adding the whole window each time.",
+          "lines": [
+            "def max_window_sum(nums, k):",
+            "    window = sum(nums[:k])",
+            "    best = window",
+            "    for i in range(k, len(nums)):",
+            "        window += nums[i] - nums[i - k]",
+            "        best = max(best, window)",
+            "    return best"
+          ],
+          "distractors": ["        window = sum(nums[i - k:i])"],
+          "explanation": "Slide the window by adding the element that enters and subtracting the one that leaves. Recomputing the sum each time would cost O(n·k)."
+        },
+        {
+          "type": "choice",
+          "id": "pointers-2-window-complexity",
+          "tag": "Complexity duel",
+          "prompt": "What is the time complexity of the sliding-window max sum above?",
+          "options": ["O(n·k)", "O(k)", "O(n)", "O(n²)"],
+          "answer": 2,
+          "explanation": "The first window costs k, then each of the remaining n − k steps is O(1). Total O(n)."
+        },
+        {
+          "type": "choice",
+          "id": "pointers-2-shrink",
+          "tag": "Concept check",
+          "prompt": "In a variable-size sliding window, when should you move the left edge?",
+          "options": ["After every step", "Only at the end of the array", "Whenever the window breaks the problem's constraint", "Never; only the right edge moves"],
+          "answer": 2,
+          "explanation": "Expand right greedily, then shrink from the left just enough to make the window valid again. That keeps it O(n)."
+        }
+      ]
+    }
+  ]
+}

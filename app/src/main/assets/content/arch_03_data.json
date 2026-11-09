@@ -1,0 +1,105 @@
+{
+  "id": "data",
+  "order": 3,
+  "track": "arch",
+  "title": "Data Depths",
+  "emoji": "🗄️",
+  "description": "Sharding, queues and surviving traffic spikes.",
+  "levels": [
+    {
+      "id": "data-1",
+      "title": "Shard It",
+      "challenges": [
+        {
+          "type": "choice",
+          "id": "data-1-sharding",
+          "tag": "Concept check",
+          "prompt": "What is database sharding?",
+          "options": ["Copying all data to several read-only replicas", "Splitting the rows across several databases, each owning a slice", "Compressing old rows", "Adding indexes"],
+          "answer": 1,
+          "explanation": "Each shard holds part of the data, so writes spread out too. Replicas copy everything and only help with reads."
+        },
+        {
+          "type": "choice",
+          "id": "data-1-hotkey",
+          "tag": "Concept check",
+          "prompt": "For a global social app, which shard key is most likely to create a hot shard?",
+          "options": ["Hash of user_id", "The user's country", "Hash of post_id", "A random UUID"],
+          "answer": 1,
+          "explanation": "Countries are wildly uneven: one shard would get a huge share of the users. Hashing a high-cardinality ID spreads load evenly."
+        },
+        {
+          "type": "choice",
+          "id": "data-1-consistent-hashing",
+          "tag": "Concept check",
+          "prompt": "Why use consistent hashing instead of shard = hash(key) % N?",
+          "options": ["It is cryptographically secure", "Adding or removing a shard moves only about 1/N of the keys instead of almost all of them", "It sorts the keys", "It removes the need for replicas"],
+          "answer": 1,
+          "explanation": "With modulo, changing N remaps nearly every key. On a hash ring, a new node only takes over the keys between it and its neighbor."
+        },
+        {
+          "type": "design",
+          "id": "data-1-writes",
+          "prompt": "An analytics service ingests events: 70% of requests are writes. Caches and replicas will not save you here.",
+          "scenario": {
+            "name": "Event Firehose",
+            "baseRps": 5000,
+            "readRatio": 0.3,
+            "budget": 1000,
+            "maxLatencyMs": 65,
+            "start": {"APP_SERVER": 1, "DB_SHARD": 1}
+          },
+          "explanation": "3,500 writes/s need at least 4 shards (1,000 writes/s each). Replicas and caches only help reads. A queue can turn slow synchronous writes into fast acknowledgements."
+        }
+      ]
+    },
+    {
+      "id": "data-2",
+      "title": "Flash Sale",
+      "challenges": [
+        {
+          "type": "choice",
+          "id": "data-2-queue",
+          "tag": "Concept check",
+          "prompt": "Orders spike 3× for ten minutes during a sale. How does a message queue help?",
+          "options": ["It makes the database bigger", "It buffers the burst, so workers process orders at a steady rate", "It deletes duplicate orders", "It caches product pages"],
+          "answer": 1,
+          "explanation": "The queue absorbs the spike and workers drain it at the database's pace. Users get a quick acknowledgement instead of a timeout."
+        },
+        {
+          "type": "choice",
+          "id": "data-2-idempotent",
+          "tag": "Concept check",
+          "prompt": "Your queue delivers each message at least once. Why must the payment worker be idempotent?",
+          "options": ["To run faster", "A retried message must not charge the customer twice", "Queues require it to start", "To save storage"],
+          "answer": 1,
+          "explanation": "At-least-once means duplicates happen. Use an idempotency key (like the order ID) and skip work that is already done."
+        },
+        {
+          "type": "choice",
+          "id": "data-2-ratelimit",
+          "tag": "Concept check",
+          "prompt": "Which rate-limiting algorithm allows short bursts while keeping the long-term average under control?",
+          "options": ["Fixed window counter", "Token bucket", "Round robin", "Least connections"],
+          "answer": 1,
+          "explanation": "Tokens refill at a steady rate and can pile up to the bucket size, so a client can burst briefly but not exceed the average for long."
+        },
+        {
+          "type": "design",
+          "id": "data-2-flash",
+          "prompt": "Black Friday: traffic hits 3× the normal 4,000 req/s, and 40% of requests are orders. Survive the spike.",
+          "scenario": {
+            "name": "Black Friday",
+            "baseRps": 4000,
+            "peakMultiplier": 3.0,
+            "readRatio": 0.6,
+            "budget": 1200,
+            "maxLatencyMs": 55,
+            "start": {"APP_SERVER": 1, "DB_SHARD": 1}
+          },
+          "explanation": "At peak, 4,800 writes/s would need 5 shards. A queue lets the database absorb them at the average rate (1,600/s), so 2 shards are enough. A cache handles the reads."
+        }
+      ]
+    }
+  ]
+}

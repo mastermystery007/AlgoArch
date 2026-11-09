@@ -1,0 +1,144 @@
+{
+  "id": "trees",
+  "order": 5,
+  "track": "algo",
+  "title": "Tree Grove",
+  "emoji": "🌳",
+  "description": "Traversals, recursion and binary search trees.",
+  "levels": [
+    {
+      "id": "trees-1",
+      "title": "Traversals",
+      "challenges": [
+        {
+          "type": "trace",
+          "id": "trees-1-preorder",
+          "algo": "preorder",
+          "start": "A",
+          "prompt": "Tap the nodes in preorder: node, then left subtree, then right subtree.",
+          "nodes": [
+            {"id": "A", "x": 0.5, "y": 0.12},
+            {"id": "B", "x": 0.27, "y": 0.45},
+            {"id": "C", "x": 0.73, "y": 0.45},
+            {"id": "D", "x": 0.13, "y": 0.82},
+            {"id": "E", "x": 0.39, "y": 0.82},
+            {"id": "F", "x": 0.61, "y": 0.82},
+            {"id": "G", "x": 0.87, "y": 0.82}
+          ],
+          "edges": [
+            {"from": "A", "to": "B"}, {"from": "A", "to": "C"},
+            {"from": "B", "to": "D"}, {"from": "B", "to": "E"},
+            {"from": "C", "to": "F"}, {"from": "C", "to": "G"}
+          ],
+          "answer": ["A", "B", "D", "E", "C", "F", "G"],
+          "explanation": "Preorder visits a node before its children: A, then all of B's subtree (B, D, E), then C's (C, F, G)."
+        },
+        {
+          "type": "trace",
+          "id": "trees-1-postorder",
+          "algo": "postorder",
+          "start": "A",
+          "prompt": "Tap the nodes in postorder: left subtree, right subtree, then the node.",
+          "nodes": [
+            {"id": "A", "x": 0.5, "y": 0.12},
+            {"id": "B", "x": 0.27, "y": 0.45},
+            {"id": "C", "x": 0.73, "y": 0.45},
+            {"id": "D", "x": 0.13, "y": 0.82},
+            {"id": "E", "x": 0.39, "y": 0.82},
+            {"id": "F", "x": 0.61, "y": 0.82},
+            {"id": "G", "x": 0.87, "y": 0.82}
+          ],
+          "edges": [
+            {"from": "A", "to": "B"}, {"from": "A", "to": "C"},
+            {"from": "B", "to": "D"}, {"from": "B", "to": "E"},
+            {"from": "C", "to": "F"}, {"from": "C", "to": "G"}
+          ],
+          "answer": ["D", "E", "B", "F", "G", "C", "A"],
+          "explanation": "Postorder finishes both children before the parent, so the root comes last. It is the order you would use to delete a tree safely."
+        },
+        {
+          "type": "trace",
+          "id": "trees-1-bst-inorder",
+          "algo": "inorder",
+          "start": "8",
+          "prompt": "This is a binary search tree. Tap the nodes in inorder: left subtree, node, right subtree.",
+          "nodes": [
+            {"id": "8", "x": 0.55, "y": 0.1},
+            {"id": "3", "x": 0.3, "y": 0.37},
+            {"id": "10", "x": 0.8, "y": 0.37},
+            {"id": "1", "x": 0.12, "y": 0.64},
+            {"id": "6", "x": 0.45, "y": 0.64},
+            {"id": "14", "x": 0.9, "y": 0.64},
+            {"id": "4", "x": 0.33, "y": 0.9},
+            {"id": "7", "x": 0.57, "y": 0.9}
+          ],
+          "edges": [
+            {"from": "8", "to": "3"}, {"from": "8", "to": "10"},
+            {"from": "3", "to": "1"}, {"from": "3", "to": "6"},
+            {"from": "10", "to": "14"},
+            {"from": "6", "to": "4"}, {"from": "6", "to": "7"}
+          ],
+          "answer": ["1", "3", "4", "6", "7", "8", "10", "14"],
+          "explanation": "Inorder traversal of a BST always comes out sorted. That makes it a quick way to validate a BST or find the k-th smallest value."
+        },
+        {
+          "type": "choice",
+          "id": "trees-1-serialize",
+          "tag": "Concept check",
+          "prompt": "You want to save a tree to a file and rebuild exactly the same shape later. Which traversal (with markers for empty children) is the usual choice?",
+          "options": ["Preorder", "Inorder", "Random order", "Sorted order"],
+          "answer": 0,
+          "explanation": "Preorder writes each parent before its children, so when rebuilding you always create a node before you need to attach anything to it."
+        }
+      ]
+    },
+    {
+      "id": "trees-2",
+      "title": "Recursion Roots",
+      "challenges": [
+        {
+          "type": "order",
+          "id": "trees-2-depth",
+          "prompt": "Compute the maximum depth of a binary tree recursively.",
+          "lines": [
+            "def max_depth(node):",
+            "    if node is None:",
+            "        return 0",
+            "    left = max_depth(node.left)",
+            "    right = max_depth(node.right)",
+            "    return 1 + max(left, right)"
+          ],
+          "distractors": ["    return max(left, right)"],
+          "explanation": "An empty tree has depth 0. Each node adds 1 to the deeper of its two subtrees; forgetting the + 1 always returns 0."
+        },
+        {
+          "type": "choice",
+          "id": "trees-2-depth-complexity",
+          "tag": "Complexity duel",
+          "prompt": "The max_depth function visits each node once. Time complexity for a tree with n nodes?",
+          "options": ["O(log n)", "O(n)", "O(n log n)", "O(h²) where h is the height"],
+          "answer": 1,
+          "explanation": "Every node is visited exactly once, doing O(1) work: O(n). The call stack uses O(h) memory, where h is the height."
+        },
+        {
+          "type": "choice",
+          "id": "trees-2-bst-worst",
+          "tag": "Complexity duel",
+          "prompt": "You insert 1, 2, 3, ..., n into a plain (non-balancing) BST in that order. How long does a search take now?",
+          "options": ["O(1)", "O(log n)", "O(n)", "O(n²)"],
+          "answer": 2,
+          "explanation": "Sorted inserts make every node a right child, so the tree is really a linked list. Self-balancing trees (AVL, red-black) prevent this."
+        },
+        {
+          "type": "choice",
+          "id": "trees-2-lca",
+          "tag": "Pattern spotting",
+          "prompt": "Find the lowest common ancestor of two values in a BST. What is the key idea?",
+          "options": ["Store every root-to-node path, then compare", "Walk down from the root: go left if both values are smaller, right if both are larger, otherwise stop", "Level-order traversal", "Sort the nodes first"],
+          "answer": 1,
+          "explanation": "The first node where the two values split to different sides (or where you hit one of them) is the LCA. O(h) time, O(1) extra space."
+        }
+      ]
+    }
+  ]
+}

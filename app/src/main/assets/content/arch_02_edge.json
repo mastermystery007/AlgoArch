@@ -1,0 +1,91 @@
+{
+  "id": "edge",
+  "order": 2,
+  "track": "arch",
+  "title": "Edge & Replicas",
+  "emoji": "🌐",
+  "description": "CDNs, replication and the consistency trade-offs that come with copies.",
+  "levels": [
+    {
+      "id": "edge-1",
+      "title": "Go Viral",
+      "challenges": [
+        {
+          "type": "choice",
+          "id": "edge-1-cdn",
+          "tag": "Concept check",
+          "prompt": "What does a CDN mainly serve?",
+          "options": ["Database writes", "Static content like images, video and JS from servers close to users", "User sessions", "Background jobs"],
+          "answer": 1,
+          "explanation": "CDN edge servers around the world cache static files, so users get them from nearby and your origin servers never see those requests."
+        },
+        {
+          "type": "choice",
+          "id": "edge-1-lag",
+          "tag": "Concept check",
+          "prompt": "You add read replicas. What new problem can appear?",
+          "options": ["Writes become impossible", "Replication lag: a read right after a write may return old data", "The cache stops working", "More app servers are needed"],
+          "answer": 1,
+          "explanation": "Replicas copy changes asynchronously, so they can trail the primary. A common fix is read-your-own-writes: send a user's reads to the primary briefly after they write."
+        },
+        {
+          "type": "design",
+          "id": "edge-1-viral",
+          "prompt": "A video clip went viral. Most requests are for the same static thumbnails and video chunks. Keep the site up on a tight budget.",
+          "scenario": {
+            "name": "Viral Moment",
+            "baseRps": 12000,
+            "readRatio": 0.95,
+            "staticRatio": 0.6,
+            "budget": 640,
+            "maxLatencyMs": 55,
+            "start": {"APP_SERVER": 1, "DB_SHARD": 1}
+          },
+          "explanation": "60% of the traffic is static. A CDN absorbs it at the edge, leaving ~4,800 req/s for your servers. A cache then protects the database from the remaining reads."
+        }
+      ]
+    },
+    {
+      "id": "edge-2",
+      "title": "Consistency",
+      "challenges": [
+        {
+          "type": "choice",
+          "id": "edge-2-cap",
+          "tag": "Concept check",
+          "prompt": "A network partition splits your database cluster. According to CAP, what must you choose between?",
+          "options": ["Speed and cost", "Consistency and availability", "Reads and writes", "SQL and NoSQL"],
+          "answer": 1,
+          "explanation": "During a partition, a node either refuses requests it cannot confirm (consistent) or answers with possibly stale data (available). Without a partition you can have both."
+        },
+        {
+          "type": "choice",
+          "id": "edge-2-eventual",
+          "tag": "Concept check",
+          "prompt": "Which feature can most safely be eventually consistent?",
+          "options": ["Bank account balance", "Like count on a post", "Seat booking for a flight", "Password change"],
+          "answer": 1,
+          "explanation": "Nobody is harmed if a like count lags by a second. Money, bookings and security settings need strong consistency."
+        },
+        {
+          "type": "choice",
+          "id": "edge-2-leader",
+          "tag": "Concept check",
+          "prompt": "In leader-follower replication, where do writes go?",
+          "options": ["To any follower", "To the leader, which then replicates them to followers", "To the cache", "To the load balancer's disk"],
+          "answer": 1,
+          "explanation": "A single leader orders all writes, which avoids conflicts. Followers serve reads. If the leader dies, a follower is promoted."
+        },
+        {
+          "type": "choice",
+          "id": "edge-2-quorum",
+          "tag": "Concept check",
+          "prompt": "Data is stored on N = 3 replicas. A write waits for W = 2 acknowledgements and a read asks R = 2 replicas. Why does this guarantee the read sees the latest write?",
+          "options": ["Because 2 is a majority of anything", "Because W + R > N, so the read and write sets always overlap on at least one replica", "Because reads are faster than writes", "It does not guarantee it"],
+          "answer": 1,
+          "explanation": "With W + R > N, any read set shares at least one replica with the last write set, so it is guaranteed to see the newest value."
+        }
+      ]
+    }
+  ]
+}
